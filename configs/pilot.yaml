@@ -1,0 +1,22 @@
+region: Piemonte
+crs: EPSG:32632
+resolution_m: 250
+block_m: 20000
+exclusion_buffer_m: 5000
+inventory_uncertainty_buffer_m: 500
+fire_start: '2015-01-01T00:00:00'
+fire_end_exclusive: '2025-01-01T00:00:00'
+fire_model_min_year: 2016
+seed: 20261028
+max_positive_train: 3000
+max_positive_test: 2000
+cv_folds: 3
+wildfire_holdout: northern_20_percent_bbox_height
+bootstrap_replicates: 200
+background_strategies: [uniform, elevation_matched]
+models: [logistic, random_forest, xgboost]
+composite_weights:
+  equal: [1, 1, 1]
+  flood_focus: [2, 1, 1]
+  landslide_focus: [1, 2, 1]
+  wildfire_focus: [1, 1, 2]
