@@ -1,5 +1,7 @@
 # Ordered reproduction
 
+The repository includes [site ranks](results/site_sensitivity.csv), [spatial buffer sensitivity](results/spatial_buffer_sensitivity.csv) and [raster validation](results/cog_validation.csv). Read those tables directly from a public checkout. The pipeline below acquires provider data and regenerates the rasters, maps and QGIS project.
+
 1. Use Python 3.12 and install the exact environment from `requirements-lock.txt`. `uv pip install --python .venv/Scripts/python.exe -r requirements-lock.txt` is an equivalent installation command after creating the environment. `environment.yml` is supplied for conda users.
 2. Run `python src/acquire.py`. It acquires the ISTAT boundary; paginates IFFI polygons, P2 flood zones and CLC2012; downloads EFFIS separately for each supported province filter; downloads all GLO-90 tiles covering the boundary; and imports the frozen public OSM site sample from `../climate-risk-energy-grid/` when available.
 3. Run `python src/context_acquire.py` to retrieve the GHSL tile selected using the official Mollweide tiling schema. It appends its hashes to the catalog.
@@ -8,7 +10,7 @@
 6. Run `python src/train.py` to extend to floods and wildfire. Existing completed hazards are reused only for a matching configuration, code, predictor and label fingerprint. Then run `python src/spatial_sensitivity.py` for the fixed-model 5 km versus 20 km exclusion-gap comparison. Frozen raw bytes make this path reproducible despite changes to live services.
 7. Run `python src/deliver.py` to assemble composites, site summaries, COG validation, maps, reports, QGIS XML and the run manifest.
 8. Run `python -m pytest -q` and retain output in `results/validation.txt`. Tests cover the split barrier, whole-group exclusion, training-only imputation, background construction, actual COGs/alignment and monotonic decision aggregation.
-9. Open `qgis/piedmont_screening.qgs` in QGIS. An XML parse and datasource check are automated; native QGIS rendering requires a functioning local QGIS connection and must not be claimed when unavailable.
+9. After delivery succeeds, open the generated `qgis/piedmont_screening.qgs` in QGIS. The project is a local output. Delivery checks its XML and datasources. Viewing the map requires a local QGIS installation.
 
 Run commands from this repository's root using `.venv/Scripts/python.exe` on Windows or `.venv/bin/python` on Linux. No credentials or online publication are involved.
 
@@ -18,4 +20,4 @@ Each raw response has request metadata and a checksum. Cache parameters are chec
 
 `acquire.py` rebuilds the core catalog. Rerun `context_acquire.py` after it to reappend GHSL lineage. `prepare.py` rebuilds harmonised inputs; training fingerprints include configuration, predictors and hazard labels. `deliver.py` regenerates derived documentation and maps from computed results. Model-selection decisions use development CV, not holdout performance.
 
-If the sibling Project 1 directory is unavailable on a clean machine, the frozen imported geometry input `data/raw/candidate_site_sample.gpkg` reconstructs the exact sample. It is a locally derived snapshot, not an external download, and is catalogued separately from the original `osm_power_project1.json` response and its query metadata. The acquisition code supports this retained-copy route. The convenience sample is not a full regional electricity register.
+The exact historical site rankings require the retained local geometry at `data/raw/candidate_site_sample.gpkg` or the original inputs from the sibling Turin grid project. The public checkouts omit these snapshots. The convenience sample covers mapped features in the study window.

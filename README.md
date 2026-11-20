@@ -4,9 +4,15 @@ A 250 m screening exercise comparing landslide inventory, regulatory P2 flood zo
 
 [Portfolio case study](https://www.daudee.com/work/piedmont-energy-screening)
 
+## Inspect the published results
+
+- [Site rank sensitivity](results/site_sensitivity.csv) compares weighting and aggregation scenarios.
+- [Spatial buffer sensitivity](results/spatial_buffer_sensitivity.csv) compares the exclusion gaps used for spatial evaluation.
+- [Raster validation](results/cog_validation.csv) records checks on the generated Cloud Optimized GeoTIFFs.
+
 ## Run
 
-Use Python 3.12 in a clean virtual environment. Full pipeline runs may need the original source snapshots or a new acquisition from the documented providers.
+Use Python 3.12 in a clean virtual environment. The [reproduction guide](REPRODUCE.md) lists the provider downloads, generated files and frozen inputs. Reproducing the historical site ranks requires the original OSM geometry snapshot.
 
 ```sh
 python -m pip install -r requirements-lock.txt
